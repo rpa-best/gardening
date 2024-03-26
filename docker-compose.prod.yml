@@ -1,0 +1,38 @@
+version: '3.3'
+
+services:
+  gardening_web:
+    container_name: gardening_web
+    build: ./app/
+    ports:
+      - "8008:8008"
+    command: sh -c "python manage.py runserver 0.0.0.0:8008"
+    restart: always
+    env_file:
+      - ./app/.env
+    volumes:
+      - ./app/:/app/
+
+  gardening_redis:
+    container_name: gardening_redis
+    image: redis:alpine
+  
+  gardening_celery:
+    container_name: gardening_celery
+    build: ./app/
+    command: celery -A core worker -l info
+    volumes:
+      - ./app/:/app/
+    restart: always
+    env_file:
+      - ./app/.env
+  
+  gardening_celery_beat:
+    container_name: gardening_celery_beat
+    build: ./app/
+    command: celery -A core beat -l info
+    volumes:
+      - ./app/:/app/
+    restart: always
+    env_file:
+      - ./app/.env
