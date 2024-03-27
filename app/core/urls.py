@@ -28,6 +28,8 @@ urlpatterns = [
     path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     path('api/oauth/', include('oauth.urls')),
+    path('api/location/', include('location.urls')),
+    path('api/car/', include('car.urls')),
     path('*', RedirectView.as_view(url="/admin/", permanent=False))
 ]
 

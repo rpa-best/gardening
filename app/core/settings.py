@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.postgres',
+    'django.contrib.gis',
     'rest_framework',
     'corsheaders',
     'drf_spectacular',
@@ -50,6 +51,8 @@ INSTALLED_APPS = [
     'django_celery_results',
     'simple_history',
     'oauth',
+    'location',
+    'car'
 ]
 
 MIDDLEWARE = [
@@ -91,7 +94,7 @@ WSGI_APPLICATION = 'core.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
         'NAME': os.getenv('POSTGRES_DB'),
         'USER': os.getenv('POSTGRES_USER'),
         'PASSWORD': os.getenv('POSTGRES_PASSWORD'),

@@ -53,6 +53,8 @@ class User(AbstractUser):
     email = models.EmailField(_("email address"), unique=True)
     phone = models.CharField(_("phone"), blank=True, null=True, validators=[validate_phone], max_length=255)
     surname = models.CharField(_("surname"), blank=True, null=True, max_length=255)
+    max_cars_count = models.IntegerField(default=1)
+    
     username = None
 
     REQUIRED_FIELDS = []
@@ -115,5 +117,6 @@ class ChangePasswordUUID(models.Model):
             raise exceptions.ValidationError({'password1':  _exp.messages}, getattr(_exp, 'code', None))
         user.password = make_password(password)
         user.save()
+        self.delete()
         return user
         
