@@ -12,23 +12,33 @@ INVITE_URL = "https://kk.keyman24.ru/invite-location"
 INVITE_STATUS_CHECKING = "checking"
 INVITE_STATUS_ACCEPTED = "accepted"
 INVITE_STATUS = (
-    (INVITE_STATUS_CHECKING, "Checking"),
-    (INVITE_STATUS_ACCEPTED, "Accepted")
+    (INVITE_STATUS_CHECKING, "На проверке"),
+    (INVITE_STATUS_ACCEPTED, "Принята")
 )
+
 ROLE_USER = "user"
 ROLE_ADMIN = "admin"
 ROLES = (
-    (ROLE_USER, "User"),
-    (ROLE_ADMIN, "Admin")
+    (ROLE_USER, "Пользователь"),
+    (ROLE_ADMIN, "Админ")
+)
+
+MODE_IN = "in"
+MODE_OUT = "out"
+MODES = (
+    (None, "Проста камера"),
+    (MODE_IN, "Вход"),
+    (MODE_OUT, "Выход"),
 )
 
 User = get_user_model()
 
 
 class Location(models.Model):
-    name = models.CharField(max_length=255)
-    max_count_cars = models.IntegerField()
-    max_count_users = models.IntegerField()
+    name = models.CharField(max_length=255, verbose_name = "Название")
+    max_count_cars = models.IntegerField(verbose_name = "Кол-во машин")
+    max_count_users = models.IntegerField(verbose_name = "Кол-во пользователи")
+    
     history = HistoricalRecords()
 
     class Meta:
@@ -65,11 +75,12 @@ class Location(models.Model):
 
 
 class UserInLocation(models.Model):
-    user = models.ForeignKey(User, models.CASCADE)
-    location = models.ForeignKey(Location, models.CASCADE)
-    max_count_cars = models.IntegerField(default=1)
-    status = models.CharField(max_length=255, default=INVITE_STATUS_CHECKING, choices=INVITE_STATUS)
-    role = models.CharField(max_length=255, choices=ROLES, default=ROLE_USER)
+    user = models.ForeignKey(User, models.CASCADE, verbose_name = "Пользователь")
+    location = models.ForeignKey(Location, models.CASCADE, verbose_name = "Локация")
+    max_count_cars = models.IntegerField(default=1, verbose_name = "Кол-во машин")
+    status = models.CharField(max_length=255, default=INVITE_STATUS_CHECKING, choices=INVITE_STATUS, verbose_name = "Статус")
+    role = models.CharField(max_length=255, choices=ROLES, default=ROLE_USER, verbose_name = "Роль")
+    
     history = HistoricalRecords()
 
     def __str__(self) -> str:
@@ -97,9 +108,10 @@ class UserInLocation(models.Model):
 
 
 class CarInLocation(models.Model):
-    location = models.ForeignKey(Location, models.CASCADE)
-    car = models.ForeignKey("car.Car", models.CASCADE)
-    blocked = models.BooleanField(default=False)
+    location = models.ForeignKey(Location, models.CASCADE, verbose_name = "Локация")
+    car = models.ForeignKey("car.Car", models.CASCADE, verbose_name = "Машина")
+    blocked = models.BooleanField(default=False, verbose_name = "Блокирован")
+
     history = HistoricalRecords()
 
     class Meta:
@@ -115,9 +127,9 @@ def invite_expires_at():
 
 
 class InviteUUID(models.Model):
-    uuid = models.UUIDField(default=uuid4, primary_key=True)
-    location = models.ForeignKey(Location, models.CASCADE)
-    expires_at = models.DateTimeField(default=invite_expires_at)
+    uuid = models.UUIDField(default=uuid4, primary_key=True, editable=False)
+    location = models.ForeignKey(Location, models.CASCADE, verbose_name = "Локация")
+    expires_at = models.DateTimeField(default=invite_expires_at, verbose_name = "Истекает")
     lifetime = datetime.timedelta(days=1)
 
     class Meta:
@@ -140,3 +152,32 @@ class InviteUUID(models.Model):
         )
         self.delete()
         return uil
+
+
+class CameraInLocation(models.Model):
+    name = models.CharField(max_length=255, verbose_name = "Название")
+    camera = models.OneToOneField("camera.Camera", models.CASCADE, verbose_name = "Камера")
+    location = models.ForeignKey("location.Location", models.CASCADE, verbose_name = "Локация")
+    mode = models.CharField(max_length=255, choices=MODES, null=True, blank=True, verbose_name = "Собития")
+
+    history = HistoricalRecords()
+
+    class Meta:
+        verbose_name = "Камера в локации"
+        verbose_name_plural = "Камеры в локации"
+
+    def __str__(self) -> str:
+        return f"{self.name} ({self.camera}:{self.location})"
+
+
+class History(models.Model):
+    cil = models.ForeignKey(CameraInLocation, models.CASCADE, verbose_name = "Камера в локации")
+    date = models.DateTimeField(auto_now_add=True, verbose_name = "Дата")
+    car = models.ForeignKey("car.Car", models.SET_NULL, blank=True, null=True, verbose_name = "Машина")
+    car_number = models.CharField(max_length=255, verbose_name = "Номер машини")
+    car_user = models.ForeignKey(User, models.CASCADE, verbose_name = "Пользователь")
+    mode = models.CharField(default=MODE_IN, choices=MODES, max_length=255, verbose_name = "Собития")
+
+    class Meta:
+        verbose_name = "История локации"
+        verbose_name_plural = "Истории локации"

@@ -2,12 +2,13 @@ from rest_framework.viewsets import ReadOnlyModelViewSet, ModelViewSet
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
-from .models import Location, UserInLocation, CarInLocation, INVITE_STATUS_ACCEPTED, INVITE_STATUS_CHECKING, ROLE_ADMIN
+from .models import Location, UserInLocation, CarInLocation, CameraInLocation, INVITE_STATUS_ACCEPTED, INVITE_STATUS_CHECKING, ROLE_ADMIN
 from .permissions import AdminPermission
 from .serializers import (
     LocationSerializer, UserInLocationListSerializer, 
     UserInLocationPatchSerializer, UserInLocationAcceptSerializer,
-    CarInLocationSerializer, CarInLocationPostSerializer
+    CarInLocationSerializer, CarInLocationPostSerializer,
+    CameraInLocationPatchSerializer, CameraInLocationSerializer
 )
 
 class LocationView(ReadOnlyModelViewSet):
@@ -93,3 +94,17 @@ class UserInLocationCarView(CarInLocationView):
 
     def get_queryset(self):
         return CarInLocation.objects.filter(location_id=self.kwargs.get("location_id"), car__user_id=self.kwargs.get("user_id"))
+
+
+class CameraInLocationView(ModelViewSet):
+    http_method_names = ["get", "head", "patch"]
+    permission_classes = (IsAuthenticated, AdminPermission)
+
+    def get_serializer_class(self):
+        if self.action in ["list", "retrieve"]:
+            return CameraInLocationSerializer
+        return CameraInLocationPatchSerializer
+
+    def get_queryset(self):
+        return CameraInLocation.objects.filter(location_id=self.kwargs.get("location_id"))
+    

@@ -2,7 +2,8 @@ from drf_spectacular.utils import extend_schema_field, extend_schema_serializer
 from rest_framework import serializers
 from oauth.serializers import AccountSerializer
 from car.serializers import CarSerializer
-from .models import Location, UserInLocation, CarInLocation, INVITE_STATUS_ACCEPTED
+from camera.serializers import CameraSerializer
+from .models import Location, UserInLocation, CarInLocation, CameraInLocation, INVITE_STATUS_ACCEPTED
 
 
 class LocationSerializer(serializers.ModelSerializer):
@@ -76,3 +77,20 @@ class CarInLocationPostSerializer(serializers.ModelSerializer):
         location: Location = validated_data["location"]
         car = validated_data["car"]
         return location.add_car(car)
+    
+
+class CameraInLocationSerializer(serializers.ModelSerializer):
+    camera = CameraSerializer()
+
+    class Meta:
+        model = CameraInLocation
+        exclude = ["location"]
+
+
+
+class CameraInLocationPatchSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = CameraInLocation
+        exclude = ["camera", "location"]
+    

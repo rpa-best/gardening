@@ -52,7 +52,8 @@ INSTALLED_APPS = [
     'simple_history',
     'oauth',
     'location',
-    'car'
+    'car',
+    'camera',
 ]
 
 MIDDLEWARE = [

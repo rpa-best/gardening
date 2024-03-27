@@ -1,7 +1,7 @@
 from django.apps import AppConfig
 
 
-class CarConfig(AppConfig):
+class CameraConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'car'
-    verbose_name = "Машина"
+    name = 'camera'
+    verbose_name = "Камера"

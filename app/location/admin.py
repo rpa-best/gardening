@@ -2,7 +2,7 @@ from typing import Any
 from django.contrib.gis import admin
 from django.db.models.query import QuerySet
 from django.utils.html import format_html
-from .models import Location, UserInLocation, CarInLocation, InviteUUID, INVITE_STATUS_CHECKING, INVITE_STATUS_ACCEPTED
+from .models import Location, UserInLocation, CarInLocation, InviteUUID, CameraInLocation, History, INVITE_STATUS_CHECKING, INVITE_STATUS_ACCEPTED
 
 
 class UserInLocationInline(admin.TabularInline):
@@ -16,7 +16,6 @@ class UserInLocationInline(admin.TabularInline):
 
     def get_queryset(self, request) -> QuerySet[Any]:
         return super().get_queryset(request).filter(status=INVITE_STATUS_ACCEPTED)
-
 
 
 class UserInLocationInviteInline(admin.TabularInline):
@@ -33,17 +32,26 @@ class CarInLocationInline(admin.TabularInline):
     model = CarInLocation
     extra = 0
     readonly_fields = ["user"]
-    fields = ["user", "car"]
+    fields = ["user", "car", "blocked"]
+    verbose_name = "Машина"
+    verbose_name_plural = "Машини"
 
     @admin.display(description="User")
     def user(self, obj: CarInLocation):
         return str(obj.car.user)
 
 
+class CameraInLocationInline(admin.TabularInline):
+    model = CameraInLocation
+    extra = 0
+    verbose_name = "Камера"
+    verbose_name_plural = "Камери"
+
+
 @admin.register(Location)
 class LocationAdmin(admin.ModelAdmin):
     list_display = ["name", "users", "cars"]
-    inlines = [UserInLocationInline, UserInLocationInviteInline, CarInLocationInline]
+    inlines = [UserInLocationInline, UserInLocationInviteInline, CarInLocationInline, CameraInLocationInline]
 
     @admin.display(description="Users")
     def users(self, obj: Location):
@@ -78,5 +86,9 @@ class InviteUUIDAdmin(admin.ModelAdmin):
             return "-"
         return format_html(f"<a href={obj.url}>{obj.url}</a>")
 
-    def has_change_permission(self, request, obj=None) -> bool:
-        return False
+
+@admin.register(History)
+class HistoryAdmin(admin.ModelAdmin):
+    list_display = ["cil", "car_number", "date"]
+    list_filter = ["cil__location"]
+    
