@@ -11,5 +11,6 @@ router.register(r'location/(?P<location_id>\d+)/car', views.CarInLocationView, "
 router.register(r'location/(?P<location_id>\d+)/camera', views.CameraInLocationView, "")
 
 urlpatterns = [
-    path("", include(router.urls))
+    path("", include(router.urls)),
+    path("invite/<uuid>/", views.CreateInviteView.as_view())
 ]

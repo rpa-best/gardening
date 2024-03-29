@@ -87,8 +87,8 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'core.wsgi.application'
-
+# WSGI_APPLICATION = 'core.wsgi.application'
+ASGI_APPLICATION = 'core.asgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
@@ -196,6 +196,7 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'EXCEPTION_HANDLER': 'core.utils.exceptions.exception_handler',
     'DATETIME_FORMAT': "%d.%m.%Y %H:%M:%S",
     'UPDATE_LAST_LOGIN': True
 }
@@ -256,3 +257,12 @@ CELERY_RESULT_BACKEND = 'django-db'
 #
 # }
 CELERY_RESULT_EXTENDED = True
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [(os.getenv("REDIS_HOST"), 6379)],
+        },
+    },
+}

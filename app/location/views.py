@@ -2,13 +2,17 @@ from rest_framework.viewsets import ReadOnlyModelViewSet, ModelViewSet
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
-from .models import Location, UserInLocation, CarInLocation, CameraInLocation, INVITE_STATUS_ACCEPTED, INVITE_STATUS_CHECKING, ROLE_ADMIN
+from rest_framework.generics import RetrieveAPIView
+from rest_framework.decorators import action
+from oauth.consumers import send_notification
+from .models import Location, UserInLocation, CarInLocation, CameraInLocation, InviteUUID, INVITE_STATUS_ACCEPTED, INVITE_STATUS_CHECKING, ROLE_ADMIN
 from .permissions import AdminPermission
 from .serializers import (
     LocationSerializer, UserInLocationListSerializer, 
     UserInLocationPatchSerializer, UserInLocationAcceptSerializer,
     CarInLocationSerializer, CarInLocationPostSerializer,
-    CameraInLocationPatchSerializer, CameraInLocationSerializer
+    CameraInLocationPatchSerializer, CameraInLocationSerializer,
+    InviteShowSerializer,
 )
 
 class LocationView(ReadOnlyModelViewSet):
@@ -18,6 +22,18 @@ class LocationView(ReadOnlyModelViewSet):
         if self.request.user.is_anonymous:
             return Location.objects.all()
         return Location.objects.filter(userinlocation__user=self.request.user)
+    
+    def get_serializer_class(self, *args, **kwargs):
+        if self.action == "create_invite":
+            return InviteShowSerializer
+        return super().get_serializer_class(*args, **kwargs)
+    
+    @action(["get"], True)
+    def create_invite(self, request, *args, **kwargs):
+        location: Location = self.get_object()
+        invite = location.create_invite()
+        serializer = self.get_serializer(invite)
+        return Response(serializer.data, status=200)
 
 
 class UserInLocationView(ModelViewSet):
@@ -107,4 +123,22 @@ class CameraInLocationView(ModelViewSet):
 
     def get_queryset(self):
         return CameraInLocation.objects.filter(location_id=self.kwargs.get("location_id"))
-    
+
+
+class CreateInviteView(RetrieveAPIView):
+    lookup_url_kwarg = "uuid"
+    lookup_field = "uuid"
+    queryset = InviteUUID.objects.all()
+
+    def retrieve(self, request, *args, **kwargs):
+        instance: InviteUUID = self.get_object()
+        instance.validate()
+        user = instance.accept_invite(request.user)
+        for uil in UserInLocation.objects.filter(location=instance.location, status=INVITE_STATUS_ACCEPTED, role=ROLE_ADMIN):
+            send_notification(uil.user_id), {
+                "model": "Invite",
+                "id": user.id,
+                "action": "invite_created",
+                "type": "success",
+            }
+        return Response({"message": "Invite created"})

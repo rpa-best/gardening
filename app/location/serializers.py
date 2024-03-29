@@ -3,7 +3,7 @@ from rest_framework import serializers
 from oauth.serializers import AccountSerializer
 from car.serializers import CarSerializer
 from camera.serializers import CameraSerializer
-from .models import Location, UserInLocation, CarInLocation, CameraInLocation, INVITE_STATUS_ACCEPTED
+from .models import Location, UserInLocation, CarInLocation, CameraInLocation, InviteUUID, INVITE_STATUS_ACCEPTED
 
 
 class LocationSerializer(serializers.ModelSerializer):
@@ -93,4 +93,13 @@ class CameraInLocationPatchSerializer(serializers.ModelSerializer):
     class Meta:
         model = CameraInLocation
         exclude = ["camera", "location"]
+
+
+class InviteShowSerializer(serializers.ModelSerializer):
+    url = serializers.URLField()
+
+    class Meta:
+        model = InviteUUID
+        fields = ["expires_at", "url"]
+
     

@@ -8,7 +8,7 @@ from rest_framework import exceptions
 from simple_history.models import HistoricalRecords
 
 
-INVITE_URL = "https://kk.keyman24.ru/invite-location"
+INVITE_URL = "https://kk.keyman24.ru/api/location/invite"
 INVITE_STATUS_CHECKING = "checking"
 INVITE_STATUS_ACCEPTED = "accepted"
 INVITE_STATUS = (
@@ -49,7 +49,7 @@ class Location(models.Model):
         return self.name
     
     def create_invite(self):
-        return InviteUUID.create(self)
+        return InviteUUID.objects.create(location=self)
     
     def add_car(self, car):
         uil = UserInLocation.objects.filter(user=car.user, location=self).first()
@@ -138,7 +138,7 @@ class InviteUUID(models.Model):
 
     @property
     def url(self):
-        return f"{INVITE_URL}?uuid={self.uuid}"
+        return f"{INVITE_URL}/{self.uuid}/"
     
     def validate(self):
         current_time = aware_utcnow()
@@ -147,6 +147,8 @@ class InviteUUID(models.Model):
         return self
     
     def accept_invite(self, user: User) -> UserInLocation:
+        if UserInLocation.objects.filter(user=user, location=self.location).exists():
+            raise exceptions.ValidationError(_("This user already in location"), "user_already_in_location")
         uil = UserInLocation.objects.create(
             user=user, location=self.location
         )

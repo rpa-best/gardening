@@ -8,19 +8,10 @@ services:
       - "8008:8008"
     command: sh -c "python manage.py runserver 0.0.0.0:8008"
     restart: always
-    env_file: ./app/.env
+    env_file:
+      - ./app/.env
     volumes:
       - ./app/:/app/
-    depends_on:
-      - gardening_db
-
-  gardening_db:
-    image: postgis/postgis:latest
-    volumes:
-      - ./postgres_data:/var/lib/postgresql/data
-    restart: always
-    container_name: gardening_db
-    env_file: ./app/.env
 
   gardening_redis:
     container_name: gardening_redis
