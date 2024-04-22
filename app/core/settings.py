@@ -207,6 +207,7 @@ CORS_ORIGIN_WHITELIST = [
     'http://localhost:8080',
     'http://127.0.0.1:8080',
     'http://178.208.94.197',
+    'http://95.142.38.166'
 ]
 XS_SHARING_ALLOWED_METHODS = ['POST', 'GET', 'OPTIONS', 'PUT', 'PATCH', 'DELETE']
 
@@ -231,7 +232,7 @@ CORS_ALLOW_HEADERS = (
 USE_X_FORWARDED_HOST = True
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 X_FRAME_OPTIONS = 'ALLOWALL'
-CSRF_TRUSTED_ORIGINS = ["https://www.api.kk.keyman24.ru", "https://api.kk.keyman24.ru"]
+CSRF_TRUSTED_ORIGINS = ["http://95.142.38.166/"]
 
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
