@@ -1,6 +1,20 @@
 version: '3.3'
 
 services:
+  gardening_front:
+    container_name: gardening_front
+    build:
+      context: ./frontend/
+      dockerfile: Dockerfile
+    ports:
+      - 3000:3000
+    command: sh -c "npm run dev"
+    restart: always
+    env_file:
+      - ./frontend/.env
+    volumes:
+      - ./frontend/:/app/
+
   gardening_web:
     container_name: gardening_web
     build: ./app/
