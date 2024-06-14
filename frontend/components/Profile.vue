@@ -8,7 +8,7 @@
                     <img v-else src="/images/user-big.svg" style="width: 100%;" />
                 </div>
                 <h2 class="text-center mt-3" style="font-size: 18px; color: var(--surface-900); font-weight: 600;">Иванов Сергей Викторович</h2>
-                <p class="text-center" style="font-size: 14px;">+7 (921) 599-32-45</p>
+                <p class="text-center" style="font-size: 14px;">khtkarimzhonov@gmail.com</p>
             </div>
             <div class="p-3">
                 <NuxtLink :to="{name: 'me-locations'}">

@@ -42,10 +42,12 @@
                                 <span class="cursor-pointer ml-6 pl-5 pr-5 pt-1 pb-1" style="background-color: #D8F9DA; border-radius: 8px; font-weight: bold; color: var(--primary-color)">{{ $t('Ултра') }}</span>
                             </div>
                             <div class="mt-4">
-                                <strong class="cursor-pointer">{{ $t('Редактировать профиль') }}</strong> 
+                                <NuxtLink :to="{name: 'me'}">
+                                    <strong class="cursor-pointer">{{ $t('Редактировать профиль') }}</strong> 
+                                </NuxtLink>
                             </div>
                             <div class="mt-4">
-                                <strong class="cursor-pointer" style="color: var(--primary-color)">{{ $t('Выйти') }}</strong> 
+                                <strong @click="logout" class="cursor-pointer" style="color: var(--primary-color)">{{ $t('Выйти') }}</strong> 
                             </div>
                     </div>
                 </OverlayPanel>
@@ -69,6 +71,11 @@ export default {
     computed : {
         roote_name() {
             return useRoute().name
+        }
+    },
+    methods: {
+        logout() {
+            this.$router.push({name: 'sign'})
         }
     }
 }
