@@ -36,7 +36,7 @@ class RegisterHistorySerializer(serializers.ModelSerializer):
         try:
             car = CarInLocation.objects.get(location=cil.location, car__number=number)
         except CarInLocation.DoesNotExist:
-            self.register_error("Car not added to location", "car_not_added_to_location")
+            return self.register_error("Car not added to location", "car_not_added_to_location")
         
         if car.blocked:
             self.register_error("Car is blocked", "car_blocked")
@@ -52,6 +52,7 @@ class RegisterHistorySerializer(serializers.ModelSerializer):
     
     def create(self, validated_data):
         instance: History = super().create(validated_data)
+        instance.send_ws_data()
         return {
             "number": instance.car_number,
             "message": "History successfuly added",

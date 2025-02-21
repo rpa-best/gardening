@@ -1,5 +1,9 @@
 import secrets
 import string
+import random
+
+
+generate_opt = lambda : random.randint(1000, 9999)
 
 def generate_password(length=8):
     alphabet = string.ascii_letters + string.digits

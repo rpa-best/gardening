@@ -6,6 +6,7 @@ from django.utils.translation import gettext_lazy as _
 from rest_framework_simplejwt.utils import aware_utcnow
 from rest_framework import exceptions
 from simple_history.models import HistoricalRecords
+from .consumers import send_data_cil
 
 
 INVITE_URL = "https://kk.keyman24.ru/api/location/invite"
@@ -148,7 +149,7 @@ class InviteUUID(models.Model):
     
     def accept_invite(self, user: User) -> UserInLocation:
         if UserInLocation.objects.filter(user=user, location=self.location).exists():
-            raise exceptions.ValidationError(_("This user already in location"), "user_already_in_location")
+            raise exceptions.ValidationError({'detail': _("This user already in location")}, "user_already_in_location")
         uil = UserInLocation.objects.create(
             user=user, location=self.location
         )
@@ -183,3 +184,8 @@ class History(models.Model):
     class Meta:
         verbose_name = "История локации"
         verbose_name_plural = "Истории локации"
+
+    def send_ws_data(self):
+        from .serializers import HistorySerializer
+
+        send_data_cil(self.cil.id, HistorySerializer(self).data)

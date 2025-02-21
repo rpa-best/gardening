@@ -4,13 +4,12 @@ from . import views
 
 router = DefaultRouter()
 router.register(r'location', views.LocationView, "")
-router.register(r'location/(?P<location_id>\d+)/user', views.UserInLocationView, "")
-router.register(r'location/(?P<location_id>\d+)/user/(?P<user_id>\d+)/car', views.UserInLocationCarView, "")
-router.register(r'location/(?P<location_id>\d+)/invite', views.UserInLocationInviteView, "")
-router.register(r'location/(?P<location_id>\d+)/car', views.CarInLocationView, "")
-router.register(r'location/(?P<location_id>\d+)/camera', views.CameraInLocationView, "")
+router.register(r'user', views.UserInLocationView, "")
+router.register(r'invite', views.UserInLocationInviteView, "")
+router.register(r'car', views.CarInLocationView, "")
+router.register(r'location/(?P<cil_id>\d+)/history', views.HistoryLocationView, "")
 
 urlpatterns = [
     path("", include(router.urls)),
-    path("invite/<uuid>/", views.CreateInviteView.as_view())
+    path("accept-invite/<uuid>/", views.CreateInviteView.as_view())
 ]

@@ -20,8 +20,8 @@ class CarInline(admin.TabularInline):
 @admin.register(User)
 class UserAdmin(SimpleHistoryAdmin, _UserAdmin):
     fieldsets = (
-        (None, {"fields": ("email", "password")}),
-        (_("Personal info"), {"fields": ("first_name", "last_name", "surname", "phone", "max_cars_count")}),
+        (None, {"fields": ("phone", "password")}),
+        (_("Personal info"), {"fields": ("first_name", "last_name", "surname", "max_cars_count")}),
         (
             _("Permissions"),
             {
@@ -41,12 +41,12 @@ class UserAdmin(SimpleHistoryAdmin, _UserAdmin):
             None,
             {
                 "classes": ("wide",),
-                "fields": ("email", "password1", "password2"),
+                "fields": ("phone", "password1", "password2"),
             },
         ),
     )
-    list_display = ("email", "first_name", "last_name", "surname", "is_staff")
-    ordering = ("email",)
+    list_display = ("phone", "first_name", "last_name", "surname", "is_staff")
+    ordering = ("phone",)
     search_fields = User.autocomplete_search_fields()
     readonly_fields = ["date_joined", "last_login"]
     inlines = [CarInline]

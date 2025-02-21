@@ -25,3 +25,4 @@ pandas==1.4.4
 rest-pandas
 openpyxl==3.0.10
 channels-redis
+django-phonenumber-field

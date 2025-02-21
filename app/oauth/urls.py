@@ -1,14 +1,13 @@
 from django.urls import path
-from .views import AuthView, RefreshTokenView, VerifyTokenView, ChangePasswordView, ChangePasswordPerformView, ChangePasswordVerifyView, CreateUserLegalView, AccountView
-
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
+from .views import SignUpView, OptView, OptVerifyView, MeView
 
 urlpatterns = [
-    path('auth/', AuthView.as_view()),
-    path('refresh-token/', RefreshTokenView.as_view()),
-    path('token-verify/', VerifyTokenView.as_view()),
-    path('change-password/', ChangePasswordView.as_view()),
-    path('change-password-verify/', ChangePasswordVerifyView.as_view()),
-    path('change-password-perform/', ChangePasswordPerformView.as_view()),
-    path('create/', CreateUserLegalView.as_view()),
-    path('me/', AccountView.as_view())
+    path('', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('opt/', OptView.as_view(), name='opt'),
+    path('opt-verify/', OptVerifyView.as_view(), name='opt-verify'),
+    path('account/', SignUpView.as_view(), name='sign-up'),
+    path('refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('verify/', TokenVerifyView.as_view(), name='token_verify'),
+    path('me/', MeView.as_view())
 ]

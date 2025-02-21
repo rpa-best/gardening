@@ -24,7 +24,19 @@ class Car(models.Model):
         return f'{self.number} ({self.user})'
 
     @classmethod
-    def add_car(cls, user: User, **kwargs):
-        if Car.objects.filter(user=user).count() + 1 > user.max_cars_count:
-            raise ValidationError(_("Cars crowed"), "cars_crowded_to_user")
+    def add_car(cls, user, **kwargs):
+        # if Car.objects.filter(user=uil.user).count() + 1 > uil.user.max_cars_count:
+        #     raise ValidationError(_("Cars crowed"), "cars_crowded_to_user")
         return cls.objects.create(user=user, **kwargs)
+
+    def add_location(self, locations: list[int]):
+        from location.models import CarInLocation, UserInLocation
+
+        CarInLocation.objects.filter(car=self).exclude(location_id__in=locations).delete()
+        for location_id in locations:
+            uil = UserInLocation.objects.get(user=self.user, location_id=location_id)
+            if CarInLocation.objects.filter(car__user=self.user, location_id=location_id).count() + 1 > uil.max_count_cars:
+                raise ValidationError(_("Cars crowed"), "cars_crowded_to_user")
+            CarInLocation.objects.get_or_create(car=self, location_id=location_id)
+
+        CarInLocation.objects.exclude(car=self).count()

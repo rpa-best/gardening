@@ -6,12 +6,12 @@
             </div>
             <div>
                 <NuxtLink :to="{name: 'index'}">
-                    <img src="/images/logo.svg" />
+                    <img src="/images/logo.svg"  alt="logo"/>
                 </NuxtLink>
             </div>
             <NuxtLink :to="{name: 'me'}">
-                <div class="mt-3 p-2" :class="{selectded_sidebar: roote_name.startsWith('me')}">
-                    <img src="/images/icons/profile.svg" width="25" />
+                <div class="mt-3 p-2" :class="{selected_sidebar: route_name.startsWith('me')}">
+                    <img src="/images/icons/profile.svg" width="25"  alt="profile"/>
                 </div>
             </NuxtLink>
         </div>
@@ -69,7 +69,7 @@ export default {
         }
     },
     computed : {
-        roote_name() {
+        route_name() {
             return useRoute().name
         }
     },
@@ -107,7 +107,7 @@ export default {
     top: 20px;
 }
 
-.selectded_sidebar {
+.selected_sidebar {
     background-color: var(--surface-50);
     border-radius: 12px;
     box-shadow: 0px 2px 0px 0px #D9D9D9;
