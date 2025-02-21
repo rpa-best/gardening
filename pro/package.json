@@ -1,0 +1,42 @@
+{
+  "name": "nuxt-ui-pro-template-dashboard",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev --host 0.0.0.0",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare",
+    "lint": "eslint .",
+    "typecheck": "nuxt typecheck",
+    "serve": "node .output/server/index.mjs"
+  },
+  "dependencies": {
+    "@blakvghost/ui-pro": "^2.0.0",
+    "@iconify-json/heroicons": "^1.2.2",
+    "@iconify-json/simple-icons": "^1.2.23",
+    "@nuxt/fonts": "^0.10.3",
+    "@nuxtjs/i18n": "^9.2.0",
+    "@nuxtjs/sitemap": "^7.2.4",
+    "@unovis/ts": "^1.5.0",
+    "@unovis/vue": "^1.5.0",
+    "@vite-pwa/nuxt": "^0.10.6",
+    "@vueuse/nuxt": "^12.5.0",
+    "date-fns": "^4.1.0",
+    "nuxt": "^3.15.4",
+    "qr-code-styling": "^1.9.1",
+    "radix-vue": "^1.9.14",
+    "v-calendar": "^3.1.2",
+    "vue-qrcode-reader": "^5.7.1"
+  },
+  "devDependencies": {
+    "@nuxt/eslint": "^1.0.0",
+    "eslint": "^9.19.0",
+    "vue-tsc": "^2.1.10"
+  },
+  "resolutions": {
+    "vue-tsc": "2.1.10"
+  },
+  "packageManager": "pnpm@9.15.5"
+}
