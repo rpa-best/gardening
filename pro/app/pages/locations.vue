@@ -37,7 +37,7 @@ export default {
       :width="500"
     >
       <UDashboardNavbar
-        :title="$t('Локации')"
+        :title="$t('Локация')"
         :badge="locations.length"
       />
       <!-- ~/components/inbox/InboxList.vue -->

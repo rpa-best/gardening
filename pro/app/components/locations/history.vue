@@ -35,7 +35,7 @@ export default {
         label: 'Дата'
       }, {
         key: 'mode',
-        label: 'Тип собития'
+        label: 'События'
       }],
       table: []
     }

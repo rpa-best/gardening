@@ -43,6 +43,12 @@ const links = [{
     text: i18n.t('Автомобили'),
     shortcuts: ['G', 'U']
   }
+},{
+  id: 'delivery',
+  label: i18n.t('Доставка'),
+  icon: 'i-heroicons-truck-20-solid',
+  disabled: true,
+  badge: 'Скоро'
 }]
 
 const groups = [{
@@ -64,7 +70,6 @@ onMounted(async () => {
       checked_links.push(link)
     }
   }
-  console.log(checked_links)
 })
 </script>
 

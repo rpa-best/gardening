@@ -50,7 +50,7 @@ export async function useIFetch<T>(
       }
     }).join('. ')
     if (response.error.value.statusCode !== 403) {
-      useToast().add({ title: message, icon: 'i-heroicons-x-circle-16-solid', color: 'red' })
+      useToast().add({ title: useI18n().t(message), icon: 'i-heroicons-x-circle-16-solid', color: 'red' })
     }
     throw Error(message)
   } else if (!['GET', 'HEAD'].includes(params.method)) {

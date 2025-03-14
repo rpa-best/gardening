@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import locale from './locale'
 const colorMode = useColorMode()
 
 const color = computed(() => colorMode.value === 'dark' ? '#111827' : 'white')
@@ -28,7 +29,7 @@ useSeoMeta({
 </script>
 
 <template>
-  <div>
+  <UApp :locale="locale">
     <NuxtLoadingIndicator />
 
     <NuxtLayout>
@@ -37,5 +38,5 @@ useSeoMeta({
 
     <UNotifications />
     <UModals />
-  </div>
+  </UApp>
 </template>

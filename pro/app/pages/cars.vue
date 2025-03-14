@@ -6,7 +6,7 @@
         style="border-radius: 5px; border: 1px solid rgb(var(--color-gray-200)); border-width: 0"
       >
         <UDashboardNavbar
-          :title="$t('Мои машини')"
+          :title="$t('Мои машины')"
           :badge="cars.length"
         >
           <template #right>
@@ -22,6 +22,10 @@
           class="w-full"
           :ui="{ divide: 'divide-gray-200 dark:divide-gray-800' }"
         >
+        <template #location_names-data="{ row }">
+            <div v-if="row.location_names && row.location_names.length">{{ row.location_names.join(', ') }}</div>
+            <div v-else>-</div>
+          </template>
           <template #action-data="{ row }">
             <UIcon
               name="i-heroicons-pencil-square-16-solid"
@@ -72,6 +76,10 @@ export default {
         {
           key: 'number',
           label: 'Номер'
+        },
+        {
+          key: 'location_names',
+          label: 'Локация'
         },
         {
           key: 'action',

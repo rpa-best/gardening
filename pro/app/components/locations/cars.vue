@@ -79,7 +79,7 @@ export default {
         },
         {
           key: 'car.user.phone',
-          label: 'Телефон номер'
+          label: 'Номер телефона'
         },
         {
           key: 'blocked',

@@ -1,33 +1,16 @@
 <template>
-  <UDashboardNavbar
-    :title="location.name"
-  >
+  <UDashboardNavbar :title="location.name">
     <template #right>
-      <UButton
-        v-if="location.role === 'admin'"
-        :label="$t('Приглашение')"
-        @click="qrcode_open"
-      />
+      <UButton v-if="location.role === 'admin'" :label="$t('Приглашение')" @click="qrcode_open" />
 
-      <UDashboardModal
-        v-model="modal.open"
-        :title="$t('Автаризуйте в системе и сканируйте')"
-        :close="{
-          color: 'primary',
-          variant: 'outline',
-          class: 'rounded-full'
-        }"
-        :ui="{ width: 'sm:max-w-l' }"
-      >
+      <UDashboardModal v-model="modal.open" :title="$t('Автаризуйте в системе и сканируйте')" :close="{
+        color: 'primary',
+        variant: 'outline',
+        class: 'rounded-full'
+      }" :ui="{ width: 'sm:max-w-l' }">
         <div class="flex flex-col justify-center items-center">
-          <qr
-            :data="modal.url"
-          />
-          <UButton
-            label="Скопировать приглашение"
-            class="mt-3"
-            @click="copy_invite"
-          />
+          <qr :data="modal.url" />
+          <UButton label="Скопировать приглашение" class="mt-3" @click="copy_invite" />
         </div>
       </UDashboardModal>
     </template>
@@ -35,31 +18,20 @@
       <UDashboardNavbarToggle icon="i-heroicons-x-mark" />
     </template>
   </UDashboardNavbar>
-  <UTabs
-    v-model="selectedCamera"
-    class="sticky top-0"
-    label-attribute="name"
-    :items="location.cameras"
-    :ui="{ wrapper: '', list: { height: 'h-9', tab: { height: 'h-7', size: 'text-[13px]' } } }"
-  >
+  <UTabs v-model="selectedCamera" class="sticky top-0" label-attribute="name" :items="location.cameras"
+    :ui="{ wrapper: '', list: { height: 'h-9', tab: { height: 'h-7', size: 'text-[13px]' } } }">
     <template #default="{ item }">
       {{ item.name }}
     </template>
   </UTabs>
-  <div
-    class="w-full flex justify-center items-center mx-auto"
-    style="aspect-ratio: 4/3; background-color: #B5B5B5; max-width: 1000px"
-  >
-    <UIcon
-      name="i-heroicons-video-camera-slash-20-solid"
-      class="w-32 h-32 text-gray-200 dark:text-gray-500"
-    />
+  <div class="overflow-y-auto">
+    <div class="w-full flex justify-center items-center mx-auto"
+      style="aspect-ratio: 4/3; background-color: #B5B5B5; max-width: 1000px">
+      <UIcon name="i-heroicons-video-camera-slash-20-solid" class="w-32 h-32 text-gray-200 dark:text-gray-500" />
+    </div>
+    <LocationsHistory v-if="location.role === 'admin'" :key="location.cameras[selectedCamera].id"
+      :cil_id="location.cameras[selectedCamera].id" />
   </div>
-  <LocationsHistory
-    v-if="location.role === 'admin'"
-    :key="location.cameras[selectedCamera].id"
-    :cil_id="location.cameras[selectedCamera].id"
-  />
 </template>
 
 <script>
