@@ -1,0 +1,27 @@
+name: Docker Compose CI
+
+on:
+  ["push"]
+
+jobs:
+
+  down:
+    runs-on: self.hosted
+    steps:
+    - uses: actions/checkout@v4
+    - name: Down the Docker containers
+      run: docker-compose -f docker-compose.prod.yml down
+
+  build:
+    runs-on: self.hosted
+    steps:
+    - uses: actions/checkout@v4
+    - name: Build the Docker image
+      run: docker-compose -f docker-compose.prod.yml build
+
+  run: 
+    runs-on: self.hosted
+    steps:
+    - uses: actions/checkout@v4
+    - name: Run Docker compose
+      run: docker-compose -f docker-compose.prod.yml up -d
